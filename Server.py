@@ -16,12 +16,23 @@ while True:
         print("Подключился!", addr)
         new_socket.setblocking(False)
         players.append(new_socket)
+        print(players)
     except BlockingIOError:
         pass
-#Подсчёт комманды игроков
-for sock in players:
-    try:
-        data = sock.recv(1024).decode() #Обработка сообщений по 1024 байта
-        print("Получил", data)
-    except:
-        pass
+
+    for sock in players: #Подсчёт комманды игроков
+        try:
+            data = sock.recv(1024).decode() #Обработка сообщений по 1024 байта
+            print("Получил", data)
+
+        except:
+            pass
+
+    for sock in players:
+        try:
+            sock.send("123".encode())
+        except:
+            players.remove(sock)
+            sock.close()  # Отключение игрока от сервера
+            print("Сокет закрыт")
+    time.sleep(1)
